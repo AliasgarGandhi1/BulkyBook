@@ -22,7 +22,6 @@ namespace BulkyBookWeb.Controllers
         //GET
         public IActionResult Create()
         {
-
             return View();
         }
 
@@ -31,9 +30,18 @@ namespace BulkyBookWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Catagory obj)
         {
-            _db.Catagories.Add(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            if(obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("DisplayOrder", "Display Order cannot be same as Name");
+            }
+            if (ModelState.IsValid)
+            {
+                _db.Catagories.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            
+            return View(obj);
         }
     }
 }
